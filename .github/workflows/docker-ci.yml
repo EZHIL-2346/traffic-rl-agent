@@ -1,0 +1,34 @@
+name: Docker CI for Traffic RL Agent
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker image
+        run: docker build -t traffic-rl-agent .
+
+      - name: Run Docker container
+        run: |
+          # Added --rm to automatically clean up the container when stopped
+          docker run -d -p 5000:5000 --name traffic-app traffic-rl-agent
+          echo "Waiting for RL model to load..."
+          sleep 10 
+
+      - name: Test API endpoint
+        run: |
+          # Using -f to fail the action if the HTTP status is 400 or 500
+          curl -f http://localhost:5000/predict/10
+
+      - name: Stop Container
+        if: always() # This runs even if the test fails
+        run: docker stop traffic-app
