@@ -19,15 +19,17 @@ jobs:
 
       - name: Run Docker container
         run: |
-          # Added --rm to automatically clean up the container when stopped
           docker run -d -p 5000:5000 --name traffic-app traffic-rl-agent
           echo "Waiting for RL model to load..."
-          sleep 10 
+          sleep 15
+
+      - name: Check container logs
+        if: always()
+        run: docker logs traffic-app 
 
       - name: Test API endpoint
         run: |
-          # Using -f to fail the action if the HTTP status is 400 or 500
-          curl -f http://localhost:5000/predict/10
+          curl -f http://localhost:5000/predict/10 || (echo "API test failed"; docker logs traffic-app; exit 1)
 
       - name: Stop Container
         if: always() # This runs even if the test fails

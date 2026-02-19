@@ -1,10 +1,9 @@
 from flask import Flask, jsonify
-import pickle
 import numpy as np
 
 app = Flask(__name__)
 
-q_table = pickle.load(open("q_table.pkl", "rb"))
+q_table = np.load("q_table.npy")
 
 @app.route("/")
 def home():
