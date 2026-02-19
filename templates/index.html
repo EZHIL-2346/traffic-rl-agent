@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Traffic Recommendation</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>🚀 Traffic Recommendation System</h1>
+
+    <form method="POST" action="/recommend">
+        <label>Content Type:</label>
+        <select name="content">
+            <option value="blog">Blog</option>
+            <option value="video">Video</option>
+            <option value="post">Social Post</option>
+        </select>
+
+        <label>Planned Posting Time:</label>
+        <select name="time">
+            <option value="morning">Morning</option>
+            <option value="afternoon">Afternoon</option>
+            <option value="evening">Evening</option>
+        </select>
+
+        <button type="submit">Get Recommendation</button>
+    </form>
+
+    {% if result %}
+        <div class="result">
+            <h2>✅ Recommendation</h2>
+            <p><strong>Best Action:</strong> {{ result }}</p>
+        </div>
+    {% endif %}
+</body>
+</html>
